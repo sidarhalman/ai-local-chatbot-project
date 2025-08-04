@@ -1,11 +1,15 @@
 import axios from 'axios';
 
+const client = axios.create({
+  baseURL: process.env.OLLAMA_HOST, 
+  timeout: 600000,
+});
+
 export const askOllama = async (prompt) => {
-  const response = await axios.post(`${process.env.OLLAMA_HOST}/api/generate`, {
+  const { data } = await client.post('/api/generate', {
     model: 'llama2:7b-chat-q2_K',
     prompt,
     stream: false,
   });
-
-  return response.data.response;
+  return data?.response ?? '';
 };
